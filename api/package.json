@@ -8,12 +8,13 @@
   "name": "stage_one_task",
   "version": "1.0.0",
   "description": "HNG Stage one Task",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "npm run shell",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": "18"
+    "node": "20.x"
   },
   "author": "Leo-Chan01",
   "license": "ISC"
