@@ -8,7 +8,7 @@
   "name": "stage_one_task",
   "version": "1.0.0",
   "description": "HNG Stage one Task",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "npm run shell",
     "test": "echo \"Error: no test specified\" && exit 1"
