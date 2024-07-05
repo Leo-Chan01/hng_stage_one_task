@@ -5,7 +5,6 @@ require('dotenv').config();
 
 const getUserLocation = require('./routes/find_location');
 const getWeatherData = require('./routes/get_weather_data');
-const getIpAddress = require('./routes/get_ip_address');
 
 app.use(cors({ origin: true }));
 app.set('trust proxy', true)
@@ -24,9 +23,7 @@ app.get('/api/hello', async (req, res) => {
 
     //Alternative
     const ipAddress = req.ip;
-
-    //SEE IT HERE
-    console.log("Client IP is " + ipAddress + " from request it is" + req.headers['x-forwarded-for']);
+    console.log("Client IP is " + ipAddress + " old method" + clientIp);
 
     try {
         const location = await getUserLocation(ipAddress);
@@ -35,7 +32,7 @@ app.get('/api/hello', async (req, res) => {
         res.json({
             client_ip: ipAddress,
             location: location,
-            greeting: 'Hello, ' + visitorName + '!, the temperature is ' + temperature + 'degrees Celcius in ' + location
+            greeting: 'Hello, ' + visitorName + '!, the temperature is ' + temperature + ' degrees Celcius in ' + location
         });
 
     } catch (error) {
@@ -50,8 +47,9 @@ app.use((req, res) => {
     });
 });
 
-let PORT = process.env.PORT || 8000
 
+//for debugging
+let PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
     console.log("app listening in http://localhost:" + PORT);
 });
