@@ -27,6 +27,7 @@ app.get('/api/hello', async (req, res) => {
             location: location,
             greeting: 'Hello, ' + visitorName + '!, the temperature is ' + temperature + 'degrees Celcius in ' + location
         });
+        
     } catch (error) {
         res.status(500).send('There was an error getting this resource. ERROR => ' +error);
     }
