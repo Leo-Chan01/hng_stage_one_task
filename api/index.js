@@ -12,32 +12,38 @@ app.set('trust proxy', true)
 
 app.get('/api/hello', async (req, res) => {
     console.log('In api hell0');
-    const visitorName = req.query.vistor_name || 'Visitor';
+    var visitorName = req.query.visitor_name || 'Visitor';
+
+    if (visitorName.startsWith('"') && visitorName.endsWith('"')
+        || visitorName.startsWith("'") && visitorName.endsWith("'")) {
+        visitorName = visitorName.slice(1, -1);
+    }
 
     //THIS SEEMED NOT TO RETURN THE RIGHT IP FOR ME🤔
-    // const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress; 
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    const ipAddress = await getIpAddress();
+    //Alternative
+    const ipAddress = req.ip;
 
     //SEE IT HERE
-    console.log("Client IP is "+ipAddress + " from request it is" +req.headers['x-forwarded-for']);
+    console.log("Client IP is " + ipAddress + " from request it is" + req.headers['x-forwarded-for']);
 
     try {
         const location = await getUserLocation(ipAddress);
         const temperature = await getWeatherData(location);
-        
+
         res.json({
             client_ip: ipAddress,
             location: location,
             greeting: 'Hello, ' + visitorName + '!, the temperature is ' + temperature + 'degrees Celcius in ' + location
         });
-        
+
     } catch (error) {
-        res.status(500).send('There was an error getting this resource. ERROR => ' +error);
+        res.status(500).send('There was an error getting this resource. ERROR => ' + error);
     }
 });
 
-app.use((req, res)=>{
+app.use((req, res) => {
     res.status(404).json({
         error: 'Endpoint not found',
         message: "The Endpoint you requested doesn't exist. Contact the dev if you're not the owner"
