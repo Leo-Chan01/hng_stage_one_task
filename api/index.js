@@ -5,25 +5,29 @@ require('dotenv').config();
 
 const getUserLocation = require('./routes/find_location');
 const getWeatherData = require('./routes/get_weather_data');
+const getIpAddress = require('./routes/get_ip_address');
 
 app.use(cors({ origin: true }));
-
-// app.get('*', (req, res) => {
-//     res.status(404).send('Resource not found');
-//     console.log("Illgal resource");
-// });
+app.set('trust proxy', true)
 
 app.get('/api/hello', async (req, res) => {
     console.log('In api hell0');
     const visitorName = req.query.vistor_name || 'Visitor';
-    const clientIp = req.header['x-forwarded-for'] || req.socket.remoteAddress;
+
+    //THIS SEEMED NOT TO RETURN THE RIGHT IP FOR ME🤔
+    // const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress; 
+
+    const ipAddress = await getIpAddress();
+
+    //SEE IT HERE
+    console.log("Client IP is "+ipAddress + " from request it is" +req.headers['x-forwarded-for']);
 
     try {
-        const location = await getUserLocation(clientIp);
+        const location = await getUserLocation(ipAddress);
         const temperature = await getWeatherData(location);
         
         res.json({
-            client_ip: clientIp,
+            client_ip: ipAddress,
             location: location,
             greeting: 'Hello, ' + visitorName + '!, the temperature is ' + temperature + 'degrees Celcius in ' + location
         });
